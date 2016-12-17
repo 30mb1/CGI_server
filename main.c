@@ -46,7 +46,6 @@ void handle_request(int client_socket, struct sockaddr_in * client_address)
 
 void start_server_on_port(char* host, int port)
 {
-    /* ===== DEFINE ===== */
     int server_socket, client_socket;
     struct sockaddr_in server_address;
     struct sockaddr_in client_address;
@@ -54,17 +53,16 @@ void start_server_on_port(char* host, int port)
 
     socklen_t client_address_size = sizeof(client_address);
 
-    /* ===== STARTING SOCKET ===== */
     server_socket = socket(AF_INET, SOCK_STREAM, 0);
 
     if (server_socket < 0) { // Something went wrong
         gettime();
         printf("[ERROR]: Could not create socket \n");
+        return;
     }
     gettime();
     printf("[OK]: Socket started successfully \n");
 
-    /* ===== SET UP SOCKET OPTIONS ===== */
     server_address.sin_addr.s_addr = inet_addr(host);
     server_address.sin_family = AF_INET;
     server_address.sin_port = htons(port);
@@ -72,22 +70,20 @@ void start_server_on_port(char* host, int port)
     if (bind(server_socket, (struct sockaddr*) &server_address, sizeof(server_address)) < 0) {
         gettime();
         printf("[ERROR]: Binding error \n");
+        return;
     }
     gettime();
     printf("[OK]: Successfully binded \n");
 
-    /* ===== START LISTENING ===== */
     if (listen(server_socket, 10)) {
-        sprintf(printf_message, "Can't listen on %s:%d", host, port);
         gettime();
-        printf("[ERROR]: %s \n", printf_message);
+        printf("[ERROR]: Can't listen on %s:%d\n", host, port);
+        return;
     }
-    sprintf(printf_message, "Listening on %s:%d", host, port);
     gettime();
-    printf("[OK]: %s \n", printf_message);
-    sprintf(printf_message, "Try to open 'http://%s:%d' in your browser", host, port);
+    printf("[OK]: Listening on %s:%d\n", host, port);
     gettime();
-    printf("[INFO]: %s \n", printf_message);
+    printf("[INFO]: Try to open 'http://%s:%d' in your browser\n", host, port);
 
     while (client_socket =  accept(server_socket, 
                             (struct sockaddr*) &client_address, 
