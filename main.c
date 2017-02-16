@@ -10,6 +10,28 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
+int is_ip(char * IP) {
+    char * endptr;
+    long int a;
+    if (a = strtol(IP, &endptr, 10)) {
+        if (a >= 0 && a <= 255) {
+            int i;
+            for (i = 0 ; i < 3; i++) {
+                ++endptr;
+                if (!(a = strtol(endptr, &endptr, 10)) || !(a >= 0 && a <= 255)) {
+                    return 0;
+                }
+            }
+            return 1;
+        } else {
+            return 0;
+        } 
+    } else {
+        return 0;
+    }
+    return 1;
+}
+
 void gettime() {
     time_t now;
     time(&now);
@@ -63,7 +85,12 @@ void start_server_on_port(char* host, int port)
     gettime();
     printf("[OK]: Socket started successfully \n");
 
-    server_address.sin_addr.s_addr = inet_addr(host);
+    if (!(is_ip(host))) {
+    	gettime();
+    	printf("[ERROR]: Invalid host \n");
+    	return;
+    }
+    inet_aton(host, &server_address.sin_addr);
     server_address.sin_family = AF_INET;
     server_address.sin_port = htons(port);
 
@@ -106,6 +133,12 @@ int main(int argc, char *argv[])
     printf("[INFO]: web-server CGI \n");
     gettime();
     printf("[INFO]: by Aliev Magomed \n");
+    if (argc != 3) {
+    	gettime();
+    	printf("[ERROR]: wrong arguments \n");
+    	return 0;
+    }
+
     start_server_on_port(argv[1], atoi(argv[2]));
     return 0;
 }
