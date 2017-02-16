@@ -18,6 +18,9 @@ int is_ip(char * IP) {
             int i;
             for (i = 0 ; i < 3; i++) {
                 ++endptr;
+                char * tmp = endptr;
+                if (*(endptr) == 48 && *(endptr+1) == 46 && strtol(endptr, &endptr, 10) == 0) continue;
+                endptr = tmp;
                 if (!(a = strtol(endptr, &endptr, 10)) || !(a >= 0 && a <= 255)) {
                     return 0;
                 }
@@ -121,7 +124,12 @@ void start_server_on_port(char* host, int port)
             gettime();
             printf("[ERROR]: Accept failed \n");
         }
-        handle_request(client_socket, &client_address);
+        pid_t pid = fork();
+        if (0 == pid) {
+        	handle_request(client_socket, &client_address);
+        } else {
+        	close(client_socket);
+        }
     }
 }
 
