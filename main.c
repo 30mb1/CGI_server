@@ -40,6 +40,12 @@ void start_server_on_port(char* host, int port)
     struct sockaddr_in server_address;
     struct sockaddr_in client_address;
     char printf_message[1024];
+    
+    if (!(is_ip(host))) {
+    	gettime();
+    	printf("[ERROR]: Invalid host \n");
+    	exit(0);
+    }
 
     socklen_t client_address_size = sizeof(client_address);
 
@@ -48,16 +54,12 @@ void start_server_on_port(char* host, int port)
     if (server_socket < 0) { // Something went wrong
         gettime();
         printf("[ERROR]: Could not create socket \n");
-        return;
+        exit(0);
     }
     gettime();
     printf("[OK]: Socket started successfully \n");
 
-    if (!(is_ip(host))) {
-    	gettime();
-    	printf("[ERROR]: Invalid host \n");
-    	return;
-    }
+
     inet_aton(host, &server_address.sin_addr);
     server_address.sin_family = AF_INET;
     server_address.sin_port = htons(port);
@@ -65,7 +67,7 @@ void start_server_on_port(char* host, int port)
     if (bind(server_socket, (struct sockaddr*) &server_address, sizeof(server_address)) < 0) {
         gettime();
         printf("[ERROR]: Binding error \n");
-        return;
+        exit(0);
     }
     gettime();
     printf("[OK]: Successfully binded \n");
@@ -73,7 +75,7 @@ void start_server_on_port(char* host, int port)
     if (listen(server_socket, 10)) {
         gettime();
         printf("[ERROR]: Can't listen on %s:%d\n", host, port);
-        return;
+        exit(0);
     }
     gettime();
     printf("[OK]: Listening on %s:%d\n", host, port);
@@ -92,6 +94,7 @@ void start_server_on_port(char* host, int port)
         pid_t pid = fork();
         if (0 == pid) {
         	handle_request(client_socket, &client_address);
+        	exit(0);
         } else {
         	close(client_socket);
         }
