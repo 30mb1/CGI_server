@@ -17,7 +17,7 @@ int is_ip(char * IP) {
 
     char * endptr;
     long int a;
-    if (a = strtol(IP, &endptr, 10)) {
+    if ((a = strtol(IP, &endptr, 10))) {
         if (a >= 0 && a <= 255) {
             int i;
             for (i = 0 ; i < 3; i++) {

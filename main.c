@@ -18,7 +18,7 @@ void handle_request(int client_socket, struct sockaddr_in * client_address) {
     printf("New request from %s:%d\n", client_ip, client_port);
 
     char recv_buffer[4096];
-    int readed_bytes = read(client_socket, recv_buffer, sizeof(recv_buffer));
+    read(client_socket, recv_buffer, sizeof(recv_buffer));
     //printf("%s\n", recv_buffer);
     char *query_str = parse_request(recv_buffer);
     GET(client_socket, query_str);
@@ -30,7 +30,6 @@ void start_server_on_port(char* host, int port)
     int server_socket, client_socket;
     struct sockaddr_in server_address;
     struct sockaddr_in client_address;
-    char printf_message[1024];
 
 
     if (!(is_ip(host))) {
@@ -74,9 +73,9 @@ void start_server_on_port(char* host, int port)
     gettime();
     printf("[INFO]: Try to open 'http://%s:%d' in your browser\n", host, port);
 
-    while (client_socket =  accept(server_socket, 
+    while ((client_socket =  accept(server_socket, 
                             (struct sockaddr*) &client_address, 
-                            &client_address_size)) 
+                            &client_address_size)))
     {
         if (client_socket < 0) {
             gettime();
