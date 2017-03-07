@@ -1,37 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <syslog.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <string.h>
 #include "utility.h"
 
-void handle_request(int client_socket, struct sockaddr_in * client_address)
-{
+void handle_request(int client_socket, struct sockaddr_in * client_address) {
     char *client_ip = inet_ntoa(client_address->sin_addr);
     int client_port = ntohs(client_address->sin_port);
 
     printf("New request from %s:%d\n", client_ip, client_port);
 
-    const char* wow_page =
-        "HTTP/1.0 200 OK\r\n"
-        "Server: customCGI\r\n"
-        "Content-type: text/html\r\n"
-        "\r\n"
-        "<html>\r\n"
-        " <body>\r\n"
-        "  <h1></h1>"
-        "  <img src='https://pbs.twimg.com/profile_images/378800000822867536/3f5a00acf72df93528b6bb7cd0a4fd0c.jpeg'>\r\n"
-        "  <h2>WOOOOOOW SUCH SERVER SO HTTP</h2>"
-        " </body>\r\n"
-        "</html>\r\n";
-
-      write(client_socket, wow_page, strlen(wow_page));
-
-      close(client_socket);
+    char recv_buffer[4096];
+    int readed_bytes = read(client_socket, recv_buffer, sizeof(recv_buffer));
+    //printf("%s\n", recv_buffer);
+    char *query_str = parse_request(recv_buffer);
+    GET(client_socket, query_str);
+    close(client_socket);
 }
 
 void start_server_on_port(char* host, int port)
@@ -40,7 +31,8 @@ void start_server_on_port(char* host, int port)
     struct sockaddr_in server_address;
     struct sockaddr_in client_address;
     char printf_message[1024];
-    
+
+
     if (!(is_ip(host))) {
     	gettime();
     	printf("[ERROR]: Invalid host \n");
@@ -86,7 +78,6 @@ void start_server_on_port(char* host, int port)
                             (struct sockaddr*) &client_address, 
                             &client_address_size)) 
     {
-        
         if (client_socket < 0) {
             gettime();
             printf("[ERROR]: Accept failed \n");
@@ -109,12 +100,12 @@ int main(int argc, char *argv[])
     printf("[INFO]: web-server CGI \n");
     gettime();
     printf("[INFO]: by Aliev Magomed \n");
+
     if (argc != 3) {
     	gettime();
     	printf("[ERROR]: wrong arguments \n");
     	return 0;
     }
-
     start_server_on_port(argv[1], atoi(argv[2]));
     return 0;
 }
