@@ -79,9 +79,9 @@ void write_header(int client_socket, int status, long int file_size) {
     write(client_socket, headers, strlen(headers));
 }
 
-void GET(int client_socket, char *url) {
+void GET(int client_socket, char *url, char *htdocs) {
     char file_name[2048]; 
-    strcpy(file_name, "../htdocs");
+    strcpy(file_name, htdocs);
     if (0 == strcmp("/", url) || 0 == strlen(url) || 0 == strcmp("/favicon.ico", url)) {
         strcat(file_name, "/index.html");
     } else {
