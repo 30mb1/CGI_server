@@ -19,7 +19,7 @@ make
 ```
 
 
- Оформляем сервер в виде системной службы для systemd.
+ Оформляем сервер в виде системной службы для systemd(работает только с Ubuntu).
 
 
 ```
@@ -47,4 +47,39 @@ sudo ./install
 
 service cgi start
 service cgi stop
+```
+
+## How it works ##
+
+При запуске программа создает PID файл, в который записывает ID текущего процесса, чтобы в дальнейшем можно было послать на него сигнал для завершения работы.
+
+
+```
+#!c
+//creating PID file
+FILE * file = fopen(path_to_pidfile, "a+");
+fprintf(file, "%d", getpid());
+fclose(file);
+
+//killing running server
+FILE * file = fopen(path_to_pidfile, "r+");
+fscanf(file, "%d", &pid);
+kill(pid, SIGTERM);
+fclose(file);
+remove(path_to_pidfile);
+```
+Далее с помощью набор функций для работы с сокетами настраиваем наш сервер.
+Если все прошло без ошибок, начинаем принимать входящие соединения. Для каждого принятого соединения создаем отдельный процесс, родительский процесс при этом продолжает слушать.
+
+
+```
+#!c
+
+pid_t pid = fork();
+if (0 == pid) {
+    handle_request(client_socket, &client_address, htdocs);
+    exit(0);
+} else {
+    close(client_socket);
+}
 ```
