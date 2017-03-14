@@ -20,10 +20,10 @@ int main(int argc, char *argv[]) {
 	//printf("%s\n", path);
 
 	//getcwd(dir, PATH_MAX);
-	strcpy(dir, "/etc/systemd/system/cgi.service");
+	strcpy(dir, "/etc/systemd/system/cgi.service.");
 	FILE * file = fopen(dir, "w+");
 	if (!file) {
-		printf("Can't create .service file\n");
+		printf("Can't create .service file.\n");
 	}
 	getcwd(dir, PATH_MAX);
 	fprintf(file, "[Unit]\n"
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
 				path, host, port, dir,
 				path, dir);
 	fclose(file);
-
+	printf("File created succsessfully, now you can start server with systemd\n");
 	return 0;
 }
 
