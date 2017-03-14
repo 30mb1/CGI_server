@@ -30,6 +30,7 @@ void handle_request(int client_socket, struct sockaddr_in * client_address, char
 
 void start_server_on_port(char* host, int port, char* htdocs)
 {
+
     int server_socket, client_socket;
     struct sockaddr_in server_address;
     struct sockaddr_in client_address;

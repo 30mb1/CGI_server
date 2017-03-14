@@ -6,7 +6,7 @@
 
 
 int main(int argc, char *argv[]) {
-	char host[16], path[PATH_MAX], cur_dir[PATH_MAX];
+	char host[16], path[PATH_MAX], dir[PATH_MAX];
 	int port;
 	printf("This utility will help you to set up your server as a systemd service.\n");
 	printf("Please, enter server host:\n");
@@ -19,13 +19,13 @@ int main(int argc, char *argv[]) {
 	scanf("%s", path);
 	//printf("%s\n", path);
 
-	getcwd(cur_dir, PATH_MAX);
-	strcat(cur_dir, "/cgi.service");
-	FILE * file = fopen(cur_dir, "w+");
+	//getcwd(dir, PATH_MAX);
+	strcpy(dir, "/etc/systemd/system/cgi.service");
+	FILE * file = fopen(dir, "w+");
 	if (!file) {
-		printf("cant creat cgi file\n");
+		printf("Can't create .service file\n");
 	}
-	getcwd(cur_dir, PATH_MAX);
+	getcwd(dir, PATH_MAX);
 	fprintf(file, "[Unit]\n"
 				"Description=my cgi service.\n"
 				"\n"
@@ -36,9 +36,8 @@ int main(int argc, char *argv[]) {
 				"\n"
 				"[Install]\n"
 				"WantedBy=multi-user.target\n",
-				path, host, port, cur_dir,
-				path, cur_dir);
-
+				path, host, port, dir,
+				path, dir);
 	fclose(file);
 
 	return 0;
