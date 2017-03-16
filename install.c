@@ -1,4 +1,4 @@
-#include <stdio.h>
+	#include <stdio.h>
 #include <dirent.h>
 #include <unistd.h>
 #include <string.h>
@@ -6,21 +6,8 @@
 
 
 int main(int argc, char *argv[]) {
-	char host[16], path[PATH_MAX], dir[PATH_MAX];
-	int port;
-	printf("This utility will help you to set up your server as a systemd service.\n");
-	printf("Please, enter server host:\n");
-	scanf("%s", host);
-	//printf("%s\n", host);
-	printf("Please, enter port:\n");
-	scanf("%d", &port);
-	//printf("%d\n", port);
-	printf("Please, enter path to executable file:\n");
-	scanf("%s", path);
-	//printf("%s\n", path);
-
-	//getcwd(dir, PATH_MAX);
-	strcpy(dir, "/etc/systemd/system/cgi.service.");
+	char dir[PATH_MAX];
+	strcpy(dir, "/etc/systemd/system/cgi.service");
 	FILE * file = fopen(dir, "w+");
 	if (!file) {
 		printf("Can't create .service file.\n");
@@ -31,15 +18,16 @@ int main(int argc, char *argv[]) {
 				"\n"
 				"[Service]\n"
 				"Type=forking\n"
-				"ExecStart=%s %s %d %s\n"
-				"ExecStop=%s stop %s\n"
+				"EnvironmentFile=%s/config\n"
+				"ExecStart=/usr/local/bin/cgi $ARG1 $ARG2 %s\n"
+				"ExecStop=/usr/local/bin/cgi stop %s\n"
 				"\n"
 				"[Install]\n"
 				"WantedBy=multi-user.target\n",
-				path, host, port, dir,
-				path, dir);
+				dir, dir, dir);
 	fclose(file);
-	printf("File created succsessfully, now you can start server with systemd\n");
+	printf("Server installed successully.\n"
+		   "To change default configurations(host, port) see config file at %s/config.\n", dir);
 	return 0;
 }
 
