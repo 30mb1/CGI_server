@@ -5,15 +5,13 @@
 	</head>
   <body>
   	<img id = 'doge' width = '640' height = '480' src='http://fanaru.com/doge/image/18360-doge-doge-simple.jpg' alt='very doge'>
-  	<h2>WOOOOOOW SUCH SERVER SO HTTP</h2>
-    <h3><button type='button' onclick='wowdoge()''>Click Me!</button></h3>
-		<!--<form method ='get'>
-			First arg:<br>
-			<input type='text' name='firstarg'><br>
-			Second arg:<br>
-			<input type='text' name='secondarg'><br>
-			<input type='submit' value='click'>
-		</form>-->
+  	<h1>WOOOOOOW SUCH SERVER SO HTTP</h1>
+    <h3><button type='button' onclick='wowdoge()'>Click Me!</button></h3>
+
+    <form action="/cgi-bin/get_time.cgi" method="get">
+    	<input type="submit" value="Get current time"/>
+	</form>
+
 		<script>
 			function wowdoge() {
 				document.getElementById('doge').src = 'http://i1.kym-cdn.com/photos/images/newsfeed/000/674/934/422.jpg';

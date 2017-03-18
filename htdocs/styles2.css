@@ -1,0 +1,146 @@
+/* 
+=== COLORS ===
+#2C2A4A - BACKGROUND;
+#D33F49 - MONSTER;
+#25233D - SHADOW
+#7FB7BE - IRIS
+#F6EFFF - TEXT; 
+
+=== FONT ===
+'Ubuntu', sans-serif;
+*/
+
+body {
+    background: #2C2A4A;
+}
+
+.box {
+    position: relative;
+    margin: auto;
+    display: block;
+    margin-top: 15%;
+    width: 700px;
+    height: 520px;
+}
+
+h1 {
+    font-family: 'Ubuntu', sans-serif;
+    margin-top: 3%;
+    text-align: center;
+    color: #F6EFFF;
+    font-size: 85px;
+}
+
+
+p {
+    font-family: 'Ubuntu', sans-serif;
+    text-align: center;
+    color: #F6EFFF;
+    font-size: 45px;
+}
+.four_1, .four_2 {
+    position: absolute;
+    bottom: -15%;
+    font-size: 400px;
+    color: #D33F49;
+}
+.four_1 {
+    left: 120%;
+}
+.four_2 {
+    right: 120%;
+}
+
+.ghost {
+    position: absolute;
+    bottom: 15%;
+    left: 25%;
+    width: 350px;
+    height: 350px;
+    background: #D33F49;
+    border-radius: 100%;
+}
+.hair1, .hair2 {
+  position: absolute;
+  top: -2px;
+  width: 100px;
+  height: 100px;
+  background: #D33F49;
+  border-radius: 100% 0 100% 100%;
+  transform: rotate(-20deg)
+}
+.hair1 {
+    left: 30%;
+}
+.hair2 {
+    left: 45%;
+}
+
+.eye1, .eye2 {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  background: #FFF;
+  border-radius: 100%;
+  top: 34%;
+}
+.eye1 {
+    left: 20%;
+}
+.eye2 {
+    right: 20%;
+}
+.iris1, .iris2 {
+    position: absolute;
+    width: 70%;
+    height: 70%;
+    top: 15%;
+    left: 6%;
+    background: #7FB7BE;
+    border-radius: 100%;
+}
+.mouth {
+    position: absolute;
+    width: 40%;
+    height: 2%;
+    top: 66%;
+    left: 29%;
+    background: #603335;
+    border-radius: 10%; 
+}
+.teeth1, .teeth2 {
+    position: absolute;
+    width: 25px;
+    height: 35px;
+    top: 66%;
+    background: #FFF;
+}
+.teeth1 {
+    left: 33%;
+    border-radius: 0% 0% 0% 100%; 
+}
+.teeth2 {
+    left: 56%;
+    border-radius: 0% 0% 100% 0%;
+}
+
+.ghost_sh {
+    position: absolute;
+    width: 290px;
+    height: 50px;
+    top: 95%;
+    left: 30%;
+    background: #25233D;
+    border-radius: 100%;
+}
+
+
+
+
+
+
+
+
+
+
+

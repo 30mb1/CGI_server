@@ -67,14 +67,12 @@ void write_header(int client_socket, int status, long int file_size) {
                         "\r\n", 
                         file_size);
     } else {
-        char error[] = "sorry, this file does not exist ;(";
         sprintf(headers,"HTTP/1.1 404 NOT FOUND\r\n"
                         "Server: CustomCGI\r\n"
-                        "Content-Type: text/plain\r\n"
+                        "Content-Type: text/html\r\n"
                         "Content-Length: %ld\r\n"
-                        "\r\n"
-                        "%s",
-                        strlen(error), error);
+                        "\r\n",
+                        file_size);
     }
     write(client_socket, headers, strlen(headers));
 }
@@ -89,15 +87,24 @@ void GET(int client_socket, char *url, char *htdocs) {
     }
     //printf("%s\n", file_name);
     int file_id = open(file_name, O_RDONLY);
+    struct stat st;
+    char page[8192];
+    int ret_in;
     if (-1 == file_id) {
-        write_header(client_socket, 404, 0);
+        char error_page[2048];
+        strcpy(error_page, htdocs);
+        strcat(error_page, "/404page.html");
+        file_id = open(error_page, O_RDONLY);
+        fstat(file_id, &st);
+        write_header(client_socket, 404, st.st_size);
+        ret_in = read(file_id, page, 8192);
+        write(client_socket, page, ret_in);
+        close(file_id);
     } else {
-        struct stat st;
         fstat(file_id, &st);
         //printf("%ld\n", st.st_size);
         write_header(client_socket, 200, st.st_size);
-        char page[8192];
-        int ret_in;
+        
         while ((ret_in = read(file_id, page, 8192)) > 0) {
             int ret_out = 0;
             while (ret_out != ret_in) {
