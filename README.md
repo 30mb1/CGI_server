@@ -30,6 +30,7 @@ service cgi stop
 
 
 ```с++
+
 //creating PID file
 FILE * file = fopen(path_to_pidfile, "a+");
 fprintf(file, "%d", getpid());
@@ -80,5 +81,3 @@ Coming soon:
 1. Работа со сторонними программами и выдача результата их работы.
 2. Поддержка POST запросов.
 =======
-
->>>>>>> c15e12b1807a003e720ff6cfe44c9cf31afb4b0a
