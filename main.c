@@ -37,11 +37,15 @@ void start_server_on_port(char* host, int port, char* htdocs)
     int server_socket, client_socket;
     struct sockaddr_in server_address;
     struct sockaddr_in client_address;
+    char path_to_pidfile[PATH_MAX];
+    strcpy(path_to_pidfile, htdocs);
+    strcat(path_to_pidfile, "/cgi.pid");
 
 
     if (!(is_ip(host))) {
     	gettime();
     	printf("[ERROR]: Invalid host \n");
+        remove(path_to_pidfile);
     	exit(0);
     }
 
@@ -52,6 +56,7 @@ void start_server_on_port(char* host, int port, char* htdocs)
     if (server_socket < 0) { // Something went wrong
         gettime();
         printf("[ERROR]: Could not create socket \n");
+        remove(path_to_pidfile);
         exit(0);
     }
     gettime();
@@ -65,6 +70,7 @@ void start_server_on_port(char* host, int port, char* htdocs)
     if (bind(server_socket, (struct sockaddr*) &server_address, sizeof(server_address)) < 0) {
         gettime();
         printf("[ERROR]: Binding error \n");
+        remove(path_to_pidfile);
         exit(0);
     }
     gettime();
@@ -73,6 +79,7 @@ void start_server_on_port(char* host, int port, char* htdocs)
     if (listen(server_socket, 10)) {
         gettime();
         printf("[ERROR]: Can't listen on %s:%d\n", host, port);
+        remove(path_to_pidfile);
         exit(0);
     }
     gettime();
@@ -87,6 +94,7 @@ void start_server_on_port(char* host, int port, char* htdocs)
         if (client_socket < 0) {
             gettime();
             printf("[ERROR]: Accept failed \n");
+            continue;
         }
         pid_t pid = fork();
         if (0 == pid) {
