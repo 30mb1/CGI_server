@@ -1,3 +1,4 @@
+.SILENT:
 install:
 	gcc -o cgi main.c utility.c
 	gcc -o install install.c
