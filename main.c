@@ -16,12 +16,12 @@ void handle_request(int client_socket, struct sockaddr_in * client_address, char
     if (strcmp(query_str + strlen(query_str) - 4, "cgi?") == 0) {
         *(query_str + strlen(query_str) - 1) = '\0';
         strcat(htdocs, query_str);
-        char ** empty = (char**)malloc(sizeof(char**));
+        char ** arg = (char**)malloc(sizeof(char**));
         char ** empty2;
         char str_socket[20];
         sprintf(str_socket, "%d", client_socket);
-        empty[0] = str_socket;
-        execve(htdocs, empty, empty2);
+        arg[0] = str_socket;
+        execve(htdocs, arg, empty2);
         free(query_str);
         close(client_socket);
     }
