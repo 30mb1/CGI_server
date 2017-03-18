@@ -12,6 +12,7 @@ void handle_request(int client_socket, struct sockaddr_in * client_address, char
     //printf("%s\n", recv_buffer);
     char *query_str = parse_request(recv_buffer);
     GET(client_socket, query_str, htdocs);
+    free(query_str);
     close(client_socket);
 }
 
