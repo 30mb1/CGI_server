@@ -24,11 +24,12 @@ void handle_request(int client_socket, struct sockaddr_in * client_address, char
         execve(htdocs, arg, empty2);
         free(query_str);
         close(client_socket);
+    } else {
+        strcat(htdocs, "/htdocs");
+        GET(client_socket, query_str, htdocs);
+        free(query_str);
+        close(client_socket);
     }
-    strcat(htdocs, "/htdocs");
-    GET(client_socket, query_str, htdocs);
-    free(query_str);
-    close(client_socket);
 }
 
 void start_server_on_port(char* host, int port, char* htdocs)
