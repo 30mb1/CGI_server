@@ -1,7 +1,7 @@
 #include "utility.h"
 
 
-void handle_request(int client_socket, struct sockaddr_in * client_address, char* htdocs) {
+void handle_request(int client_socket, struct sockaddr_in * client_address, char* main_dir) {
     char *client_ip = inet_ntoa(client_address->sin_addr);
     int client_port = ntohs(client_address->sin_port);
 
@@ -15,18 +15,18 @@ void handle_request(int client_socket, struct sockaddr_in * client_address, char
     char *query_str = parse_request(recv_buffer);
     if (strcmp(query_str + strlen(query_str) - 4, "cgi?") == 0) {
         *(query_str + strlen(query_str) - 1) = '\0';
-        strcat(htdocs, query_str);
+        strcat(main_dir, query_str);
         char ** arg = (char**)malloc(sizeof(char**));
         char ** empty2;
         char str_socket[20];
         sprintf(str_socket, "%d", client_socket);
         arg[0] = str_socket;
-        execve(htdocs, arg, empty2);
+        execve(main_dir, arg, empty2);
         free(query_str);
         close(client_socket);
     } else {
-        strcat(htdocs, "/htdocs");
-        GET(client_socket, query_str, htdocs);
+        strcat(main_dir, "/htdocs");
+        GET(client_socket, query_str, main_dir);
         free(query_str);
         close(client_socket);
     }
